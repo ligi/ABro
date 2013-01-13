@@ -9,7 +9,9 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:scaleType="fitXY"
-            android:id="@+id/imageView" android:src="@drawable/ic_launcher"/>
+            android:layout_gravity="center"
+            android:id="@+id/imageView" android:src="@drawable/ic_launcher"
+            android:padding="3dp"/>
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="fill_parent"
