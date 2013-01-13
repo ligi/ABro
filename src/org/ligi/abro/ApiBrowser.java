@@ -113,13 +113,29 @@ public class ApiBrowser extends Activity {
             View mView = mLayoutInflater.inflate(R.layout.item, null);
 
             TextView title_tv = (TextView) mView.findViewById(R.id.title);
-            TextView descr_tv = (TextView) mView.findViewById(R.id.description);
+            String title = null;
+
+            try {
+                title = arr.getJSONObject(position).getString("title");
+            } catch (JSONException e) {
+            }
+
+            if (title == null)
+                try {
+                    title = arr.getJSONObject(position).getString("name");
+                } catch (JSONException e) {
+                }
+
+            title_tv.setText(title);
 
 
             try {
-                title_tv.setText(arr.getJSONObject(position).getString("title"));
+                TextView descr_tv = (TextView) mView.findViewById(R.id.description);
                 descr_tv.setText(arr.getJSONObject(position).getString("description"));
+            } catch (JSONException e) {
+            }
 
+            try {
 
                 ImageView imageView = ((ImageView) mView.findViewById(R.id.imageView));
 
