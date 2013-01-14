@@ -3,6 +3,8 @@ package org.ligi.abro;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -78,12 +80,28 @@ public class ApiBrowser extends Activity {
 
         ListView api_list = (ListView) findViewById(R.id.api_list);
 
-
         mAPIAdapter = new APIListAdapter();
         refreshList("https://" + mSpinnerAdapter.getItem(service_spinner.getSelectedItemPosition()) + "/discovery/v1/apis");
         api_list.setAdapter(mAPIAdapter);
 
         mLayoutInflater = this.getLayoutInflater();
+
+
+        api_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                try {
+                    Intent intent=new Intent(ApiBrowser.this,ResourceBrowser.class);
+                    intent.setData(Uri.parse(arr.getJSONObject(position).getString("discoveryRestUrl")));
+                    ApiBrowser.this.startActivity(intent);
+                } catch (JSONException e) {
+                    new AlertDialog.Builder(ApiBrowser.this).setMessage("cannot extract discoveryRestUrl");
+                }
+
+            }
+        });
+
     }
 
     public void refreshList(String url_str) {
@@ -100,16 +118,21 @@ public class ApiBrowser extends Activity {
 
         @Override
         public Object getItem(int position) {
-            return null;  //To change body of implemented methods use File | Settings | File Templates.
+            try {
+                return arr.getJSONObject(position);
+            } catch (JSONException e) {
+                return null;
+            }
         }
 
         @Override
         public long getItemId(int position) {
-            return 0;  //To change body of implemented methods use File | Settings | File Templates.
+            return position;
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+
             View mView = mLayoutInflater.inflate(R.layout.item, null);
 
             TextView title_tv = (TextView) mView.findViewById(R.id.title);
@@ -144,11 +167,11 @@ public class ApiBrowser extends Activity {
 
             }
             return mView;  //To change body of implemented methods use File | Settings | File Templates.
+
         }
     }
 
     public class RefreshAsyncTask extends AsyncTask<Void, Void, String> {
-
 
         Context ctx;
         String url_str;
