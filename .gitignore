@@ -9,5 +9,6 @@ local.properties
 out
 proguard-project.txt
 project.properties
-
+.gradle
+build
 
